@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Doors Hub Modular</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			background: #0d001a;
+			color: #ffffff;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+			min-height: 100vh;
+			overflow-x: hidden;
+			position: relative;
+			line-height: 1.6;
+		}
+
+		/* ==================== АНИМИРОВАННЫЙ ГРАДИЕНТ ФОНА ==================== */
+		body::before {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(
+				135deg,
+				#2d0050 0%,
+				#1a0033 25%,
+				#0d001a 50%,
+				#3d0060 75%,
+				#2d0050 100%
+			);
+			background-size: 400% 400%;
+			animation: gradientShift 15s ease infinite;
+			z-index: -2;
+		}
+
+		@keyframes gradientShift {
+			0%   { background-position: 0% 50%; }
+			50%  { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
+
+		/* ==================== ПЛАВАЮЩИЕ ЧАСТИЦЫ ==================== */
+		.particles {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+			overflow: hidden;
+		}
+
+		.particle {
+			position: absolute;
+			width: 4px;
+			height: 4px;
+			background: #b478ff;
+			border-radius: 50%;
+			box-shadow: 0 0 10px #b478ff, 0 0 20px #b478ff;
+			animation: floatUp 8s infinite linear;
+			opacity: 0;
+		}
+
+		@keyframes floatUp {
+			0% {
+				transform: translateY(100vh) scale(0);
+				opacity: 0;
+			}
+			10% { opacity: 1; }
+			90% { opacity: 1; }
+			100% {
+				transform: translateY(-100vh) scale(1);
+				opacity: 0;
+			}
+		}
+
+		/* ==================== КОНТЕЙНЕР ==================== */
+		.container {
+			max-width: 850px;
+			margin: 0 auto;
+			padding: 60px 20px;
+			position: relative;
+			z-index: 1;
+		}
+
+		/* ==================== ЗАГОЛОВОК ==================== */
+		h1 {
+			color: #c48fff;
+			font-size: 52px;
+			text-align: center;
+			margin-bottom: 12px;
+			font-weight: 800;
+			letter-spacing: 1px;
+			text-shadow:
+				0 0 20px rgba(196, 143, 255, 0.7),
+				0 0 40px rgba(196, 143, 255, 0.4),
+				0 0 80px rgba(196, 143, 255, 0.2);
+			animation: titlePulse 3s ease-in-out infinite;
+		}
+
+		@keyframes titlePulse {
+			0%, 100% {
+				text-shadow:
+					0 0 20px rgba(196, 143, 255, 0.7),
+					0 0 40px rgba(196, 143, 255, 0.4),
+					0 0 80px rgba(196, 143, 255, 0.2);
+			}
+			50% {
+				text-shadow:
+					0 0 30px rgba(196, 143, 255, 1),
+					0 0 60px rgba(196, 143, 255, 0.7),
+					0 0 120px rgba(196, 143, 255, 0.4);
+			}
+		}
+
+		.subtitle {
+			text-align: center;
+			color: #b0a0c0;
+			font-size: 18px;
+			margin-bottom: 30px;
+			animation: fadeInDown 1s ease;
+		}
+
+		@keyframes fadeInDown {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		/* ==================== БЕЙДЖИ ==================== */
+		.badges {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-bottom: 40px;
+			animation: fadeIn 1.2s ease;
+		}
+
+		.badge {
+			display: inline-block;
+			background: rgba(196, 143, 255, 0.15);
+			border: 1px solid #b478ff;
+			padding: 6px 16px;
+			border-radius: 20px;
+			font-size: 13px;
+			color: #d0b0ff;
+			font-weight: 600;
+			transition: all 0.3s ease;
+		}
+
+		.badge:hover {
+			background: rgba(196, 143, 255, 0.3);
+			transform: translateY(-3px) scale(1.05);
+			box-shadow: 0 6px 20px rgba(196, 143, 255, 0.4);
+		}
+
+		@keyframes fadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
+		}
+
+		/* ==================== БОКСЫ ==================== */
+		.box {
+			background: rgba(90, 0, 160, 0.2);
+			padding: 26px;
+			border-radius: 16px;
+			margin: 22px 0;
+			border: 1px solid #b478ff;
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+			opacity: 0;
+			transform: translateY(30px);
+			animation: slideUp 0.7s ease forwards;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		.box:nth-child(1) { animation-delay: 0.1s; }
+		.box:nth-child(2) { animation-delay: 0.25s; }
+		.box:nth-child(3) { animation-delay: 0.4s; }
+		.box:nth-child(4) { animation-delay: 0.55s; }
+		.box:nth-child(5) { animation-delay: 0.7s; }
+
+		@keyframes slideUp {
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.box:hover {
+			border-color: #d4a0ff;
+			box-shadow:
+				0 0 30px rgba(196, 143, 255, 0.3),
+				0 8px 30px rgba(0, 0, 0, 0.4);
+			transform: translateY(-4px);
+		}
+
+		.box h2 {
+			color: #c48fff;
+			margin-bottom: 18px;
+			font-size: 24px;
+			font-weight: 700;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.box h2::before {
+			content: '';
+			display: block;
+			width: 4px;
+			height: 24px;
+			background: linear-gradient(180deg, #c48fff, #8a2be2);
+			border-radius: 2px;
+		}
+
+		/* ==================== КОД ==================== */
+		.code-wrapper {
+			position: relative;
+			margin-top: 12px;
+		}
+
+		code {
+			background: #1a0033;
+			padding: 16px 50px 16px 16px;
+			border-radius: 10px;
+			display: block;
+			word-break: break-all;
+			color: #e0c0ff;
+			font-family: 'Courier New', Consolas, monospace;
+			font-size: 13px;
+			border: 1px solid #5a3d7a;
+			line-height: 1.6;
+			transition: all 0.3s ease;
+		}
+
+		code:hover {
+			border-color: #c48fff;
+			box-shadow: 0 0 20px rgba(196, 143, 255, 0.3);
+		}
+
+		.copy-btn {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background: linear-gradient(135deg, #8a2be2, #c48fff);
+			border: none;
+			color: white;
+			width: 32px;
+			height: 32px;
+			border-radius: 8px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.copy-btn:hover {
+			transform: scale(1.15) rotate(5deg);
+			box-shadow: 0 0 20px rgba(196, 143, 255, 0.6);
+		}
+
+		.copy-btn:active {
+			transform: scale(0.95);
+		}
+
+		.copy-btn.copied {
+			background: linear-gradient(135deg, #22c55e, #4ade80);
+		}
+
+		/* ==================== СПИСОК ФИЧ ==================== */
+		.features {
+			list-style: none;
+			padding: 0;
+		}
+
+		.features li {
+			padding: 12px 0 12px 36px;
+			border-bottom: 1px solid rgba(180, 120, 255, 0.15);
+			font-size: 16px;
+			position: relative;
+			transition: all 0.3s ease;
+			cursor: default;
+		}
+
+		.features li::before {
+			content: '▸';
+			position: absolute;
+			left: 12px;
+			color: #c48fff;
+			font-weight: bold;
+			transition: all 0.3s ease;
+		}
+
+		.features li:hover {
+			padding-left: 42px;
+			background: rgba(196, 143, 255, 0.08);
+			border-radius: 8px;
+			border-bottom-color: transparent;
+		}
+
+		.features li:hover::before {
+			color: #ffd700;
+			transform: translateX(4px);
+		}
+
+		.features li:last-child {
+			border-bottom: none;
+		}
+
+		.features b {
+			color: #c48fff;
+		}
+
+		/* ==================== КНОПКИ ==================== */
+		.btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			background: linear-gradient(135deg, #8a2be2, #c48fff);
+			color: white;
+			padding: 14px 32px;
+			border-radius: 12px;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 16px;
+			margin: 8px 6px;
+			transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+			box-shadow: 0 4px 20px rgba(138, 43, 226, 0.5);
+			border: none;
+			cursor: pointer;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.btn::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(
+				90deg,
+				transparent,
+				rgba(255, 255, 255, 0.3),
+				transparent
+			);
+			transition: left 0.6s ease;
+		}
+
+		.btn:hover::before {
+			left: 100%;
+		}
+
+		.btn:hover {
+			transform: translateY(-3px) scale(1.03);
+			box-shadow: 0 8px 30px rgba(196, 143, 255, 0.7);
+		}
+
+		.btn:active {
+			transform: translateY(-1px) scale(0.98);
+		}
+
+		.center {
+			text-align: center;
+			margin: 20px 0;
+		}
+
+		/* ==================== ФУТЕР ==================== */
+		.footer {
+			text-align: center;
+			color: #806090;
+			margin-top: 70px;
+			padding-top: 30px;
+			font-size: 14px;
+			border-top: 1px solid rgba(180, 120, 255, 0.15);
+			animation: fadeIn 2s ease;
+		}
+
+		.footer .heart {
+			color: #c48fff;
+			animation: heartbeat 1.5s ease-in-out infinite;
+			display: inline-block;
+		}
+
+		@keyframes heartbeat {
+			0%, 100% { transform: scale(1); }
+			20% { transform: scale(1.2); }
+			40% { transform: scale(1); }
+			60% { transform: scale(1.15); }
+			80% { transform: scale(1); }
+		}
+
+		/* ==================== МОБИЛЬНАЯ ВЕРСИЯ ==================== */
+		@media (max-width: 600px) {
+			.container {
+				padding: 40px 15px;
+			}
+			h1 {
+				font-size: 34px;
+			}
+			.subtitle {
+				font-size: 15px;
+			}
+			.box {
+				padding: 20px;
+			}
+			.box h2 {
+				font-size: 20px;
+			}
+			code {
+				font-size: 11px;
+				padding: 14px 44px 14px 14px;
+			}
+			.features li {
+				font-size: 15px;
+			}
+			.btn {
+				padding: 12px 24px;
+				font-size: 15px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<!-- Плавающие частицы -->
+	<div class="particles" id="particles"></div>
+
+	<div class="container">
+		<h1>🚪 Doors Hub Modular</h1>
+		<p class="subtitle">Модульный чит-хаб для Roblox Doors</p>
+
+		<div class="badges">
+			<span class="badge">⚙ 10 модулей</span>
+			<span class="badge">⚡ 20+ фич</span>
+			<span class="badge">📂 Open Source</span>
+			<span class="badge">💜 Free</span>
+		</div>
+
+		<div class="box">
+			<h2>Установка</h2>
+			<p>Скопируй строку ниже и вставь в экзекьютор (Delta / Solara / Krnl):</p>
+			<div class="code-wrapper">
+				<code id="loadstring">loadstring(game:HttpGet("https://raw.githubusercontent.com/artemkf161rus-max/doors-hub-modular/refs/heads/main/main.lua"))()</code>
+				<button class="copy-btn" onclick="copyCode()" id="copyBtn" title="Скопировать">📋</button>
+			</div>
+		</div>
+
+		<div class="box">
+			<h2>Фичи</h2>
+			<ul class="features">
+				<li>👁 <b>ESP</b> — Players / Tools / Prompts / Monsters</li>
+				<li>🏃 <b>Movement</b> — Speed / FOV / Fullbright</li>
+				<li>🛡 <b>Bypass</b> — Anticheat / Door Reach</li>
+				<li>🔔 <b>Notify</b> — уведомления при монстрах</li>
+				<li>🦘 <b>Jump</b> — прыжок через хук</li>
+				<li>♾ <b>Infinite Items</b> — бесконечные ключи</li>
+				<li>🐌 <b>Anti-Lag</b> — убирает лаги</li>
+				<li>⏸ <b>Anti-AFK</b> — не кикнет за неактивность</li>
+				<li>💾 <b>Save Config</b> — сохранение настроек</li>
+			</ul>
+		</div>
+
+		<div class="box">
+			<h2>Модули</h2>
+			<ul class="features">
+				<li>📄 <b>ui.lua</b> — каркас меню</li>
+				<li>🎯 <b>movement.lua</b> — speed / fov / fullbright</li>
+				<li>👀 <b>esp.lua</b> — ESP всех типов</li>
+				<li>📖 <b>library.lua</b> — код библиотеки</li>
+				<li>🛡 <b>bypass.lua</b> — anticheat / door reach</li>
+				<li>🔔 <b>notify.lua</b> — entity notify</li>
+				<li>🐌 <b>misc.lua</b> — anti-lag / infinite items</li>
+				<li>🦘 <b>jump.lua</b> — прыжок через хук</li>
+				<li>⏸ <b>antiafk.lua</b> — anti-afk</li>
+				<li>💾 <b>save.lua</b> — save config</li>
+			</ul>
+		</div>
+
+		<div class="box">
+			<h2>Ссылки</h2>
+			<div class="center">
+				<a href="https://github.com/artemkf161rus-max/doors-hub-modular" class="btn" target="_blank">
+					📦 GitHub
+				</a>
+			</div>
+		</div>
+
+		<p class="footer">
+			© 2026 artemkf161rus-max · Сделано с <span class="heart">💜</span>
+		</p>
+	</div>
+
+	<script>
+		// ==================== КОПИРОВАНИЕ LOADSTRING ====================
+		function copyCode() {
+			const code = document.getElementById('loadstring').innerText;
+			const btn = document.getElementById('copyBtn');
+
+			navigator.clipboard.writeText(code).then(() => {
+				btn.classList.add('copied');
+				btn.innerText = '✓';
+
+				setTimeout(() => {
+					btn.classList.remove('copied');
+					btn.innerText = '📋';
+				}, 2000);
+			}).catch(() => {
+				// fallback для старых браузеров
+				const textarea = document.createElement('textarea');
+				textarea.value = code;
+				document.body.appendChild(textarea);
+				textarea.select();
+				document.execCommand('copy');
+				document.body.removeChild(textarea);
+
+				btn.classList.add('copied');
+				btn.innerText = '✓';
+				setTimeout(() => {
+					btn.classList.remove('copied');
+					btn.innerText = '📋';
+				}, 2000);
+			});
+		}
+
+		// ==================== ГЕНЕРАЦИЯ ЧАСТИЦ ====================
+		const particlesContainer = document.getElementById('particles');
+
+		function createParticle() {
+			const particle = document.createElement('div');
+			particle.className = 'particle';
+
+			// случайная позиция по X
+			particle.style.left = Math.random() * 100 + '%';
+
+			// случайная задержка
+			particle.style.animationDelay = Math.random() * 8 + 's';
+
+			// случайная длительность
+			particle.style.animationDuration = (Math.random() * 5 + 6) + 's';
+
+			// случайный размер
+			const size = Math.random() * 4 + 2;
+			particle.style.width = size + 'px';
+			particle.style.height = size + 'px';
+
+			particlesContainer.appendChild(particle);
+
+			// удаляем частицу после анимации
+			setTimeout(() => {
+				particle.remove();
+			}, 14000);
+		}
+
+		// создаём частицы постоянно
+		setInterval(createParticle, 300);
+
+		// стартовые частицы
+		for (let i = 0; i < 15; i++) {
+			setTimeout(createParticle, i * 100);
+		}
+
+		// ==================== ПЛАВНЫЙ СКРОЛЛ ====================
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				const target = document.querySelector(this.getAttribute('href'));
+				if (target) {
+					target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				}
+			});
+		});
+
+		// ==================== АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ ====================
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: '0px 0px -50px 0px'
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.style.opacity = '1';
+					entry.target.style.transform = 'translateY(0)';
+				}
+			});
+		}, observerOptions);
+
+		document.querySelectorAll('.box').forEach(box => {
+			observer.observe(box);
+		});
+
+		// ==================== ПАРАЛЛАКС ЗАГОЛОВКА ====================
+		document.addEventListener('mousemove', (e) => {
+			const h1 = document.querySelector('h1');
+			if (!h1) return;
+
+			const x = (e.clientX / window.innerWidth - 0.5) * 10;
+			const y = (e.clientY / window.innerHeight - 0.5) * 10;
+
+			h1.style.transform = `translate(${x}px, ${y}px)`;
+		});
+	</script>
+</body>
+</html>
