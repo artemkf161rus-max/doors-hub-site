@@ -196,6 +196,7 @@
 		.box:nth-child(3) { animation-delay: 0.4s; }
 		.box:nth-child(4) { animation-delay: 0.55s; }
 		.box:nth-child(5) { animation-delay: 0.7s; }
+		.box:nth-child(6) { animation-delay: 0.85s; }
 
 		@keyframes slideUp {
 			to {
@@ -229,6 +230,27 @@
 			height: 24px;
 			background: linear-gradient(180deg, #c48fff, #8a2be2);
 			border-radius: 2px;
+		}
+
+		/* ==================== СКРИНШОТ ==================== */
+		.screenshot {
+			width: 100%;
+			border-radius: 12px;
+			margin-top: 12px;
+			border: 1px solid #5a3d7a;
+			cursor: pointer;
+			transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+			display: block;
+		}
+
+		.screenshot:hover {
+			transform: scale(1.02);
+			box-shadow: 0 0 30px rgba(196, 143, 255, 0.5);
+			border-color: #c48fff;
+		}
+
+		.screenshot:active {
+			transform: scale(0.98);
 		}
 
 		/* ==================== КОД ==================== */
@@ -498,6 +520,16 @@
 		</div>
 
 		<div class="box">
+			<h2>Скриншот</h2>
+			<img
+				src="https://raw.githubusercontent.com/artemkf161rus-max/doors-hub-site/main/game_Screenshot_20261013-141020.jpg"
+				alt="Doors Hub Modular Screenshot"
+				class="screenshot"
+				onclick="window.open(this.src, '_blank')"
+				loading="lazy">
+		</div>
+
+		<div class="box">
 			<h2>Ссылки</h2>
 			<div class="center">
 				<a href="https://github.com/artemkf161rus-max/doors-hub-modular" class="btn" target="_blank">
@@ -526,7 +558,6 @@
 					btn.innerText = '📋';
 				}, 2000);
 			}).catch(() => {
-				// fallback для старых браузеров
 				const textarea = document.createElement('textarea');
 				textarea.value = code;
 				document.body.appendChild(textarea);
@@ -550,32 +581,23 @@
 			const particle = document.createElement('div');
 			particle.className = 'particle';
 
-			// случайная позиция по X
 			particle.style.left = Math.random() * 100 + '%';
-
-			// случайная задержка
 			particle.style.animationDelay = Math.random() * 8 + 's';
-
-			// случайная длительность
 			particle.style.animationDuration = (Math.random() * 5 + 6) + 's';
 
-			// случайный размер
 			const size = Math.random() * 4 + 2;
 			particle.style.width = size + 'px';
 			particle.style.height = size + 'px';
 
 			particlesContainer.appendChild(particle);
 
-			// удаляем частицу после анимации
 			setTimeout(() => {
 				particle.remove();
 			}, 14000);
 		}
 
-		// создаём частицы постоянно
 		setInterval(createParticle, 300);
 
-		// стартовые частицы
 		for (let i = 0; i < 15; i++) {
 			setTimeout(createParticle, i * 100);
 		}
@@ -591,7 +613,7 @@
 			});
 		});
 
-		// ==================== АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ ====================
+		// ==================== АНИМАЦИЯ ПОЯВЛЕНИЯ ====================
 		const observerOptions = {
 			threshold: 0.1,
 			rootMargin: '0px 0px -50px 0px'
